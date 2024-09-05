@@ -1,1 +1,3 @@
 # chess
+
+BYU IS COOL!!!
