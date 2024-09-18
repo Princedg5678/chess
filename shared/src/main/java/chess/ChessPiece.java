@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -50,6 +51,7 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+        ArrayList<ChessMove> ourBoard = new ArrayList<>();
         ChessPiece piece = board.getPiece(myPosition);
         PieceType tempType = piece.getPieceType();
         if (tempType == PieceType.PAWN){
@@ -65,11 +67,31 @@ public class ChessPiece {
 
         }
         else if (tempType == PieceType.QUEEN) {
+            for (int i = 0; i < 7; i++){
+                for (int j = 0; j < 7; j++) {
+                    ChessMove newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + i, myPosition.savedCol + j), null);
 
+                }
+            }
         }
         else if (tempType == PieceType.KING) {
-
+            ChessMove newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + 1, myPosition.savedCol), null);
+            ourBoard.add(newMove);
+            newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + 1, myPosition.savedCol + 1), null);
+            ourBoard.add(newMove);
+            newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow, myPosition.savedCol + 1), null);
+            ourBoard.add(newMove);
+            newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow - 1, myPosition.savedCol + 1), null);
+            ourBoard.add(newMove);
+            newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow - 1, myPosition.savedCol), null);
+            ourBoard.add(newMove);
+            newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow - 1, myPosition.savedCol - 1), null);
+            ourBoard.add(newMove);
+            newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow, myPosition.savedCol - 1), null);
+            ourBoard.add(newMove);
+            newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + 1, myPosition.savedCol - 1), null);
+            ourBoard.add(newMove);
         }
-
+        return ourBoard;
     }
 }
