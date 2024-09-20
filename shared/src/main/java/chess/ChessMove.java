@@ -13,6 +13,15 @@ public class ChessMove {
     ChessPosition end;
     ChessPiece.PieceType promotion;
 
+    @Override
+    public String toString() {
+        return "ChessMove{" +
+                "start=" + start +
+                ", end=" + end +
+                ", promotion=" + promotion +
+                '}';
+    }
+
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
                      ChessPiece.PieceType promotionPiece) {
         start = startPosition;

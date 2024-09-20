@@ -11,6 +11,15 @@ import java.util.Objects;
 public class ChessPosition {
     int savedRow;
     int savedCol;
+
+    @Override
+    public String toString() {
+        return "ChessPosition{" +
+                "savedRow=" + savedRow +
+                ", savedCol=" + savedCol +
+                '}';
+    }
+
     public ChessPosition(int row, int col) {
         savedRow = row;
         savedCol = col;
