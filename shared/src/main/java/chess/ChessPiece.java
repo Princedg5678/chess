@@ -99,7 +99,7 @@ public class ChessPiece {
                     break;
                 }
             }
-            for (int  k = myPosition.getRow() - 1; k > 0; k--) {
+            for (int  k = myPosition.getRow() - 1; k > 1; k--) {
                 newMove = new ChessMove(myPosition, new ChessPosition(k, myPosition.savedCol), null);
                 if (board.getPiece(newMove.getEndPosition()) == null) {
                     ourBoard.add(newMove);
@@ -112,7 +112,7 @@ public class ChessPiece {
                     break;
                 }
             }
-            for (int l = myPosition.getColumn() - 1; l > 0; l--) {
+            for (int l = myPosition.getColumn() - 1; l > 1; l--) {
                 newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow, l), null);
                 if (board.getPiece(newMove.getEndPosition()) == null) {
                     ourBoard.add(newMove);
@@ -173,7 +173,7 @@ public class ChessPiece {
                 }
             }
             newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow - 2, myPosition.savedCol - 1), null);
-            if (newMove.getEndPosition().getRow() >= 1 && newMove.getEndPosition().getColumn() >= 1) {
+            if (newMove.getEndPosition().getRow() >= 1 && newMove.getEndPosition().getColumn() >= 8) {
                 if (board.getPiece(newMove.getEndPosition()) == null) {
                     ourBoard.add(newMove);
                 }
@@ -201,8 +201,8 @@ public class ChessPiece {
             }
         }
         else if (tempType == PieceType.BISHOP) {
-            for (int i = myPosition.getRow() + 1; i < 9; i++) {
-                newMove = new ChessMove(myPosition, new ChessPosition(i, i), null);
+            for (int i = 1; i < 9; i++) {
+                newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + i, myPosition.savedCol + i), null);
                 if (board.getPiece(newMove.getEndPosition()) == null) {
                     ourBoard.add(newMove);
                 }
@@ -214,8 +214,8 @@ public class ChessPiece {
                     break;
                 }
             }
-            for (int j = myPosition.getColumn() + 1; j < 9; j++) {
-                newMove = new ChessMove(myPosition, new ChessPosition(-j, j), null);
+            for (int j = 1; j < 9; j++) {
+                newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow - j, myPosition.savedCol + j), null);
                 if (board.getPiece(newMove.getEndPosition()) == null) {
                     ourBoard.add(newMove);
                 }
@@ -227,8 +227,8 @@ public class ChessPiece {
                     break;
                 }
             }
-            for (int  k = myPosition.getRow() - 1; k > 0; k--) {
-                newMove = new ChessMove(myPosition, new ChessPosition(-k, -k), null);
+            for (int  k = 1; k < 9; k++) {
+                newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow - k, myPosition.savedCol - k), null);
                 if (board.getPiece(newMove.getEndPosition()) == null) {
                     ourBoard.add(newMove);
                 }
@@ -240,8 +240,8 @@ public class ChessPiece {
                     break;
                 }
             }
-            for (int l = myPosition.getColumn() - 1; l > 0; l--) {
-                newMove = new ChessMove(myPosition, new ChessPosition(l, -l), null);
+            for (int l = 1; l < 9; l++) {
+                newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + l, myPosition.savedCol - l), null);
                 if (board.getPiece(newMove.getEndPosition()) == null) {
                     ourBoard.add(newMove);
                 }
@@ -255,8 +255,8 @@ public class ChessPiece {
             }
         }
         else if (tempType == PieceType.QUEEN) {
-            for (int i = 0; i < 7; i++){
-                for (int j = 0; j < 7; j++) {
+            for (int i = 1; i < 8; i++){
+                for (int j = 1; j < 8; j++) {
                     newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + i, myPosition.savedCol + j), null);
 
                 }
