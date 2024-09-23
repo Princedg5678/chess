@@ -72,17 +72,34 @@ public class ChessPiece {
 
         if (tempType == PieceType.PAWN){
             int moveDirection;
-            //White
-            if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+            if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) { //White
                 moveDirection = 1;
             }
-            //Black
-            if (piece.getTeamColor() == ChessGame.TeamColor.BLACK) {
+            else { //Black
                 moveDirection = -1;
             }
-            for (int i = 1; i < 8; i++){
 
+            newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection, myPosition.savedCol), null);
+            //to add, check to see if on board
+            if (board.getPiece(newMove.getEndPosition()) == null){
+                ourBoard.add(newMove);
+                if (newMove.getEndPosition().savedRow == 0 || newMove.getEndPosition().savedRow == 8){
+                    newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection, myPosition.savedCol), PieceType.QUEEN);
+                    ourBoard.add(newMove);
+                    newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection, myPosition.savedCol), PieceType.BISHOP);
+                    ourBoard.add(newMove);
+                    newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection, myPosition.savedCol), PieceType.KNIGHT);
+                    ourBoard.add(newMove);
+                    newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection, myPosition.savedCol), PieceType.ROOK);
+                    ourBoard.add(newMove);
+                }
+                newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection + moveDirection, myPosition.savedCol), null);
+                //To add, make sure that white pieces can't move 2 spaces on row 7 and vice versa. Do an AND statement in the below if statement.
+                if (board.getPiece(newMove.getEndPosition()) == null && (( &&  )||(   && ))){
+                    ourBoard.add(newMove);
+                }
             }
+
 
         }
         else if (tempType == PieceType.ROOK) {
