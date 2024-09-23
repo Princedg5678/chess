@@ -18,3 +18,6 @@ PieceType tempType = piece.getPieceType();
 then make if statements for all pieces.
 
 be sure to add equals and hashcode for all four classes with the Generate option.
+
+
+Possibly write functions for checking things such as "IsOnBoard"

@@ -95,11 +95,22 @@ public class ChessPiece {
                 }
                 newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection + moveDirection, myPosition.savedCol), null);
                 //To add, make sure that white pieces can't move 2 spaces on row 7 and vice versa. Do an AND statement in the below if statement.
-                if (board.getPiece(newMove.getEndPosition()) == null && (( &&  )||(   && ))){
+                if (board.getPiece(newMove.getEndPosition()) == null && (((moveDirection == 1) && (myPosition.savedRow == 2)) ||  ((moveDirection == -1) && (myPosition.savedRow == 7)))) {
                     ourBoard.add(newMove);
                 }
             }
-
+            newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection, myPosition.savedCol + 1), null);
+            if (board.getPiece(newMove.getEndPosition()).getTeamColor() != board.getPiece(newMove.getStartPosition()).getTeamColor()){
+                if ((newMove.getEndPosition().savedCol <= 8)) {
+                    ourBoard.add(newMove);
+                }
+            }
+            newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection, myPosition.savedCol - 1), null);
+            if (board.getPiece(newMove.getEndPosition()).getTeamColor() != board.getPiece(newMove.getStartPosition()).getTeamColor()){
+                if ((newMove.getEndPosition().savedCol >= 1)) {
+                    ourBoard.add(newMove);
+                }
+            }
 
         }
         else if (tempType == PieceType.ROOK) {
