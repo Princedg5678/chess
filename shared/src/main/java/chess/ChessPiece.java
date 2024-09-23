@@ -82,8 +82,7 @@ public class ChessPiece {
             newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection, myPosition.savedCol), null);
             //to add, check to see if on board
             if (board.getPiece(newMove.getEndPosition()) == null){
-                ourBoard.add(newMove);
-                if (newMove.getEndPosition().savedRow == 0 || newMove.getEndPosition().savedRow == 8){
+                if (newMove.getEndPosition().savedRow == 1 || newMove.getEndPosition().savedRow == 8){
                     newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection, myPosition.savedCol), PieceType.QUEEN);
                     ourBoard.add(newMove);
                     newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection, myPosition.savedCol), PieceType.BISHOP);
@@ -93,25 +92,56 @@ public class ChessPiece {
                     newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection, myPosition.savedCol), PieceType.ROOK);
                     ourBoard.add(newMove);
                 }
-                newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection + moveDirection, myPosition.savedCol), null);
-                //To add, make sure that white pieces can't move 2 spaces on row 7 and vice versa. Do an AND statement in the below if statement.
-                if (board.getPiece(newMove.getEndPosition()) == null && (((moveDirection == 1) && (myPosition.savedRow == 2)) ||  ((moveDirection == -1) && (myPosition.savedRow == 7)))) {
+                else {
                     ourBoard.add(newMove);
+                    newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection + moveDirection, myPosition.savedCol), null);
+                }
+                if (newMove.getEndPosition().getRow() >= 1 && newMove.getEndPosition().getRow() <= 8) {
+                    if (board.getPiece(newMove.getEndPosition()) == null && (((moveDirection == 1) && (myPosition.savedRow == 2)) || ((moveDirection == -1) && (myPosition.savedRow == 7)))) {
+                        ourBoard.add(newMove);
+                    }
                 }
             }
             newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection, myPosition.savedCol + 1), null);
-            if (board.getPiece(newMove.getEndPosition()).getTeamColor() != board.getPiece(newMove.getStartPosition()).getTeamColor()){
-                if ((newMove.getEndPosition().savedCol <= 8)) {
-                    ourBoard.add(newMove);
+            if (board.getPiece(newMove.getEndPosition()) != null) {
+                if (board.getPiece(newMove.getEndPosition()).getTeamColor() != board.getPiece(newMove.getStartPosition()).getTeamColor()) {
+                    if ((newMove.getEndPosition().savedCol <= 8)) {
+                        if (newMove.getEndPosition().savedRow == 1 || newMove.getEndPosition().savedRow == 8){
+                            newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection, myPosition.savedCol + 1), PieceType.QUEEN);
+                            ourBoard.add(newMove);
+                            newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection, myPosition.savedCol + 1), PieceType.BISHOP);
+                            ourBoard.add(newMove);
+                            newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection, myPosition.savedCol + 1), PieceType.KNIGHT);
+                            ourBoard.add(newMove);
+                            newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection, myPosition.savedCol + 1), PieceType.ROOK);
+                            ourBoard.add(newMove);
+                        }
+                        else {
+                            ourBoard.add(newMove);
+                        }
+                    }
                 }
             }
             newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection, myPosition.savedCol - 1), null);
-            if (board.getPiece(newMove.getEndPosition()).getTeamColor() != board.getPiece(newMove.getStartPosition()).getTeamColor()){
-                if ((newMove.getEndPosition().savedCol >= 1)) {
-                    ourBoard.add(newMove);
+            if (board.getPiece(newMove.getEndPosition()) != null) {
+                if (board.getPiece(newMove.getEndPosition()).getTeamColor() != board.getPiece(newMove.getStartPosition()).getTeamColor()) {
+                    if ((newMove.getEndPosition().savedCol >= 1)) {
+                        if (newMove.getEndPosition().savedRow == 1 || newMove.getEndPosition().savedRow == 8){
+                            newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection, myPosition.savedCol - 1), PieceType.QUEEN);
+                            ourBoard.add(newMove);
+                            newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection, myPosition.savedCol - 1), PieceType.BISHOP);
+                            ourBoard.add(newMove);
+                            newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection, myPosition.savedCol - 1), PieceType.KNIGHT);
+                            ourBoard.add(newMove);
+                            newMove = new ChessMove(myPosition, new ChessPosition(myPosition.savedRow + moveDirection, myPosition.savedCol - 1), PieceType.ROOK);
+                            ourBoard.add(newMove);
+                        }
+                        else {
+                            ourBoard.add(newMove);
+                        }
+                    }
                 }
             }
-
         }
         else if (tempType == PieceType.ROOK) {
             for (int i = myPosition.getRow() + 1; i <= 8; i++) {
