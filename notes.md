@@ -17,7 +17,14 @@ PieceType tempType = piece.getPieceType();
 
 then make if statements for all pieces.
 
-be sure to add equals and hashcode for all four classes with the Generate option.
+for pawn, set int moveDirection to 1 or -1, depending on if it is white or black. use this int for the code.
 
+Queen is just a combination of rook and bishop, just copy and paste their code.
+
+Hard-code the King and the Knight.
+
+
+
+be sure to add equals and hashcode for all four classes with the Generate option.
 
 Possibly write functions for checking things such as "IsOnBoard"
