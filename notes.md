@@ -4,7 +4,7 @@ To build the chess board, make a multidimensional matrix
 
 Board is position - 1
 
-board[][] = new ChessPiece(ChessGame.TeamColor.(Color),ChessPiece.PieceType.(Piece Type))
+for reset board, set the position, color and piece type.
 
 for ChessPosition, set new variables called saveRow and saveCol
 
@@ -13,7 +13,8 @@ Do same thing for ChessMove. Remember that promotion is different from the other
 Do same thing for ChessPiece. For collection, do : 
 
 ChessPiece piece = board.getPiece(myPosition);
-PieceType tempType = piece.getPieceType();
+use getPiece on board
+make a tempType using getPieceType
 
 then make if statements for all pieces.
 
