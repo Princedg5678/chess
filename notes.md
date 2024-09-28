@@ -24,8 +24,6 @@ Queen is just a combination of rook and bishop, just copy and paste their code.
 
 Hard-code the King and the Knight.
 
-
-
 be sure to add equals and hashcode for all four classes with the Generate option.
 
 Possibly write functions for checking things such as "IsOnBoard"
