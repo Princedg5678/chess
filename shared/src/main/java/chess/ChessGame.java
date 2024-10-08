@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -80,9 +81,21 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        if (isInCheck(teamColor) == true){
-
+        ArrayList<ChessMove> tempCount;
+        tempCount = new ArrayList<>();
+        if (isInCheck(teamColor)){
+            for (int i = 1; i < 9; i++){
+                for (int j = 1; j < 9; j++){
+                    if (myBoard.getPiece(new ChessPosition(i,j)).getTeamColor() == teamColor) {
+                        tempCount.addAll(validMoves(new ChessPosition(i,j)));
+                    }
+                }
+            }
+            if (tempCount.isEmpty()){
+                return true;
+            }
         }
+        return false;
     }
 
     /**
@@ -93,15 +106,21 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
+        ArrayList<ChessMove> tempCount;
+        tempCount = new ArrayList<>();
         if (!isInCheck(teamColor)){
-            //scan through all pieces, if all of them return null, return true, else return false
-            if (isInCheck(teamColor) == false && ){
+            for (int i = 1; i < 9; i++){
+                for (int j = 1; j < 9; j++){
+                    if (myBoard.getPiece(new ChessPosition(i,j)).getTeamColor() == teamColor) {
+                        tempCount.addAll(validMoves(new ChessPosition(i,j)));
+                    }
+                }
+            }
+            if (tempCount.isEmpty()){
                 return true;
             }
-            else {
-                return false;
-            }
         }
+        return false;
     }
 
     /**
