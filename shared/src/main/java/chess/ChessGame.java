@@ -51,7 +51,8 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        
+        ArrayList<ChessMove> moves = ;
+
     }
 
     /**
