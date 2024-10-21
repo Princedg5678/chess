@@ -51,6 +51,7 @@ public class ChessGame {
         ChessPiece pretendPiece = pretendBoard.getPiece(currentPosition);
         if (pretendBoard.getPiece(endPosition) == null) {
             pretendBoard.addPiece(endPosition, pretendPiece);
+            pretendBoard.
             return true;
         }
         else {
