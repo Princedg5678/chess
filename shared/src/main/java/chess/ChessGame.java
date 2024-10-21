@@ -43,21 +43,31 @@ public class ChessGame {
         BLACK
     }
 
+    public ChessBoard copyBoard(ChessBoard board){
+        ChessBoard copy = new ChessBoard();
+        for (int i = 1; i < 9; i++){
+            for (int j = 1; j < 9; j++){
+                ChessPosition tempPosition = new ChessPosition(i,j);
+                copy.addPiece(tempPosition ,board.getPiece(tempPosition));
+            }
+        }
+        return copy;
+    }
+
 
     public boolean pretendMove(ChessMove move){
-        ChessBoard pretendBoard = myBoard;
+        ChessBoard pretendBoard = copyBoard(myBoard);
         ChessPosition currentPosition = move.getStartPosition();
         ChessPosition endPosition =  move.getEndPosition();
         ChessPiece pretendPiece = pretendBoard.getPiece(currentPosition);
         if (pretendBoard.getPiece(endPosition) == null) {
             pretendBoard.addPiece(endPosition, pretendPiece);
-            pretendBoard.
-            return true;
+            pretendBoard.removePiece(currentPosition);
+            return !isInCheck(currentColor);
         }
         else {
             return false;
         }
-
     }
 
 
@@ -72,17 +82,11 @@ public class ChessGame {
         Collection<ChessMove> potentialMoves = myBoard.getPiece(startPosition).pieceMoves(getBoard(),startPosition);
         ArrayList<ChessMove> validMoves = new ArrayList<>();
         for (ChessMove move : potentialMoves){
-
+            if (pretendMove(move)){
+                validMoves.add(move);
+            }
         }
-        if (){
-
-        }
-        else{
-
-        }
-
-
-        return moves;
+        return validMoves;
 
     }
 
