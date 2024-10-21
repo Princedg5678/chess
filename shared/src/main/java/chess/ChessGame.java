@@ -43,6 +43,23 @@ public class ChessGame {
         BLACK
     }
 
+
+    public boolean pretendMove(ChessMove move){
+        ChessBoard pretendBoard = myBoard;
+        ChessPosition currentPosition = move.getStartPosition();
+        ChessPosition endPosition =  move.getEndPosition();
+        ChessPiece pretendPiece = pretendBoard.getPiece(currentPosition);
+        if (pretendBoard.getPiece(endPosition) == null) {
+            pretendBoard.addPiece(endPosition, pretendPiece);
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    }
+
+
     /**
      * Gets a valid moves for a piece at the given location
      *
@@ -51,7 +68,20 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        ArrayList<ChessMove> moves = ;
+        Collection<ChessMove> potentialMoves = myBoard.getPiece(startPosition).pieceMoves(getBoard(),startPosition);
+        ArrayList<ChessMove> validMoves = new ArrayList<>();
+        for (ChessMove move : potentialMoves){
+
+        }
+        if (){
+
+        }
+        else{
+
+        }
+
+
+        return moves;
 
     }
 
@@ -72,8 +102,25 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
+        Collection<ChessMove> opponentsMoves;
+        opponentsMoves = new ArrayList<>();
+
+        for (int i = 1; i < 9; i++){
+            for (int j = 1; j < 9; j++){
+
+
+            }
+        }
+        if (opponentsMoves == myBoard.getPiece(i,j)){
+            return true;
+        }
+        else{
+           return false;
+        }
+        return true;
 
     }
+
 
     /**
      * Determines if the given team is in checkmate
@@ -141,4 +188,5 @@ public class ChessGame {
     public ChessBoard getBoard() {
         return myBoard;
     }
+
 }
