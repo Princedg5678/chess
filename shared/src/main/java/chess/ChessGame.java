@@ -2,6 +2,8 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -100,6 +102,51 @@ public class ChessGame {
         throw new RuntimeException("Not implemented");
     }
 
+
+    public ChessPosition findKing(TeamColor teamColor) {
+        ChessPosition tempPosition;
+        for (int i = 1; i < 9; i++){
+            for (int j = 1; j < 9; j++){
+                tempPosition = new ChessPosition(i, j);
+                if (myBoard.getPiece(tempPosition).getPieceType() == ChessPiece.PieceType.KING
+                        && myBoard.getPiece(tempPosition).getTeamColor() == teamColor){
+                    return tempPosition;
+                }
+            }
+        }
+        return null;
+    }
+
+    public Set<ChessMove> opponentMoves(TeamColor teamColor) {
+        HashSet<ChessMove> moveList = new HashSet<ChessMove>();
+        ArrayList<ChessPosition> piecePositions = findPositions(teamColor);
+
+        for (ChessPosition position : piecePositions){
+            ChessPiece piece = new ChessPiece(myBoard.getPiece(position).getTeamColor(),
+                    myBoard.getPiece(position).getPieceType());
+            moveList.addAll(piece.pieceMoves(myBoard, position));
+        }
+        return  moveList;
+    }
+
+    //add special case for pawns
+
+    public ArrayList<ChessPosition> findPositions (TeamColor teamColor){
+
+        ChessPosition tempPosition;
+        ArrayList<ChessPosition> piecePositions = new ArrayList<ChessPosition>();
+        for (int i = 1; i < 9; i++){
+            for (int j = 1; j < 9; j++) {
+                tempPosition = new ChessPosition(i, j);
+                if (myBoard.getPiece(tempPosition).getPieceType() != null
+                        && myBoard.getPiece(tempPosition).getTeamColor() != teamColor) {
+                    piecePositions.add(tempPosition);
+                }
+            }
+        }
+        return piecePositions;
+    }
+
     /**
      * Determines if the given team is in check
      *
@@ -109,6 +156,7 @@ public class ChessGame {
     public boolean isInCheck(TeamColor teamColor) {
         Collection<ChessMove> opponentsMoves;
         opponentsMoves = new ArrayList<>();
+        ChessPosition kingPosition = findKing(teamColor);
 
         for (int i = 1; i < 9; i++){
             for (int j = 1; j < 9; j++){
@@ -166,6 +214,7 @@ public class ChessGame {
                 for (int j = 1; j < 9; j++){
                     if (myBoard.getPiece(new ChessPosition(i,j)).getTeamColor() == teamColor) {
                         tempCount.addAll(validMoves(new ChessPosition(i,j)));
+
                     }
                 }
             }
