@@ -92,6 +92,13 @@ public class ChessGame {
 
     }
 
+    /*
+    public boolean checkPiece(ChessMove move, ChessPiece piece){
+        ChessPosition currentPosition = move.getStartPosition();
+        ChessPosition endPosition =  move.getEndPosition();
+    }
+    */
+
     /**
      * Makes a move in a chess game
      *
@@ -102,9 +109,20 @@ public class ChessGame {
         ChessPosition currentPosition = move.getStartPosition();
         ChessPosition endPosition =  move.getEndPosition();
         ChessPiece piece = myBoard.getPiece(currentPosition);
+        Collection<ChessMove> ourMoves = piece.pieceMoves(myBoard, currentPosition);
 
-        myBoard.addPiece(endPosition, piece);
-        myBoard.removePiece(currentPosition);
+        if (ourMoves.contains(move)) {
+            if (pretendMove(move)) {
+                myBoard.addPiece(endPosition, piece);
+                myBoard.removePiece(currentPosition);
+            }
+            else {
+                throw new InvalidMoveException();
+            }
+        }
+        else {
+            throw new InvalidMoveException();
+        }
     }
 
 
