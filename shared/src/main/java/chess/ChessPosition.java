@@ -14,10 +14,7 @@ public class ChessPosition {
 
     @Override
     public String toString() {
-        return "ChessPosition{" +
-                "savedRow=" + savedRow +
-                ", savedCol=" + savedCol +
-                '}';
+        return "" + savedRow + savedCol;
     }
 
     public ChessPosition(int row, int col) {
