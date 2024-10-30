@@ -104,21 +104,35 @@ public class ChessGame {
         ChessPosition currentPosition = move.getStartPosition();
         ChessPosition endPosition =  move.getEndPosition();
         ChessPiece piece = myBoard.getPiece(currentPosition);
-        Collection<ChessMove> ourMoves = piece.pieceMoves(myBoard, currentPosition);
-        if (myBoard.getPiece(endPosition) == null ||
-                myBoard.getPiece(currentPosition).getTeamColor()
-                        != myBoard.getPiece(endPosition).getTeamColor()) {
-            if (!isInCheck(piece.getTeamColor())) {
-                myBoard.addPiece(endPosition, piece);
-                myBoard.removePiece(currentPosition);
-            }
-            else {
+
+        if (myBoard.getPiece(currentPosition) == null){
+            throw new InvalidMoveException();
+        }
+
+        if (myBoard.getPiece(endPosition) != null) {
+            if (myBoard.getPiece(currentPosition).getTeamColor()
+                    == myBoard.getPiece(endPosition).getTeamColor()) {
                 throw new InvalidMoveException();
             }
         }
-        else {
+
+        Collection<ChessMove> validMoves = validMoves(currentPosition);
+
+        if (!validMoves.contains(move)){
             throw new InvalidMoveException();
         }
+
+        if (move.getPromotionPiece() != null){
+            ChessPiece promotionPiece = new ChessPiece(piece.getTeamColor(), move.getPromotionPiece());
+            myBoard.addPiece(endPosition, promotionPiece);
+            myBoard.removePiece(currentPosition);
+        }
+        else {
+            myBoard.addPiece(endPosition, piece);
+            myBoard.removePiece(currentPosition);
+        }
+
+
 
 
     }
@@ -203,8 +217,10 @@ public class ChessGame {
         if (isInCheck(teamColor)){
             for (int i = 1; i < 9; i++){
                 for (int j = 1; j < 9; j++){
-                    if (myBoard.getPiece(new ChessPosition(i,j)).getTeamColor() == teamColor) {
-                        tempCount.addAll(validMoves(new ChessPosition(i,j)));
+                    if (myBoard.getPiece(new ChessPosition(i,j)) != null) {
+                        if (myBoard.getPiece(new ChessPosition(i, j)).getTeamColor() == teamColor) {
+                            tempCount.addAll(validMoves(new ChessPosition(i, j)));
+                        }
                     }
                 }
             }
@@ -228,9 +244,11 @@ public class ChessGame {
         if (!isInCheck(teamColor)){
             for (int i = 1; i < 9; i++){
                 for (int j = 1; j < 9; j++){
-                    if (myBoard.getPiece(new ChessPosition(i,j)).getTeamColor() == teamColor) {
-                        tempCount.addAll(validMoves(new ChessPosition(i,j)));
+                    if (myBoard.getPiece(new ChessPosition(i,j)) != null) {
+                        if (myBoard.getPiece(new ChessPosition(i, j)).getTeamColor() == teamColor) {
+                            tempCount.addAll(validMoves(new ChessPosition(i, j)));
 
+                        }
                     }
                 }
             }
