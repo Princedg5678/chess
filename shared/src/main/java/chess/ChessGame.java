@@ -13,13 +13,12 @@ import java.util.Set;
  */
 public class ChessGame {
 
-    private ChessBoard myBoard;
-    private TeamColor currentColor;
+    private ChessBoard myBoard = new ChessBoard();
+    private TeamColor currentColor = TeamColor.WHITE;
     private ChessBoard pretendBoard = new ChessBoard();
 
     public ChessGame() {
-        myBoard = new ChessBoard();
-        currentColor = TeamColor.WHITE;
+        myBoard.resetBoard();
     }
 
     /**
@@ -101,11 +100,16 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+
         ChessPosition currentPosition = move.getStartPosition();
         ChessPosition endPosition =  move.getEndPosition();
         ChessPiece piece = myBoard.getPiece(currentPosition);
 
         if (myBoard.getPiece(currentPosition) == null){
+            throw new InvalidMoveException();
+        }
+
+        if (getTeamTurn() != piece.getTeamColor()){
             throw new InvalidMoveException();
         }
 
@@ -130,6 +134,13 @@ public class ChessGame {
         else {
             myBoard.addPiece(endPosition, piece);
             myBoard.removePiece(currentPosition);
+        }
+
+        if (currentColor == TeamColor.WHITE) {
+            setTeamTurn(TeamColor.BLACK);
+        }
+        else{
+            setTeamTurn(TeamColor.WHITE);
         }
 
     }
