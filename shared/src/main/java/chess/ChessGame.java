@@ -66,7 +66,7 @@ public class ChessGame {
                         != pretendBoard.getPiece(endPosition).getTeamColor()) {
             pretendBoard.addPiece(endPosition, pretendPiece);
             pretendBoard.removePiece(currentPosition);
-            return !isInCheck(pretendPiece.getTeamColor());
+            return !checkNoCopy(pretendPiece.getTeamColor());
         }
         else {
             return false;
@@ -131,6 +131,7 @@ public class ChessGame {
             myBoard.addPiece(endPosition, piece);
             myBoard.removePiece(currentPosition);
         }
+
     }
 
 
@@ -151,8 +152,13 @@ public class ChessGame {
     }
 
     public Set<ChessMove> opponentMoves(TeamColor teamColor) {
+        TeamColor opponentColor = TeamColor.WHITE;
+        if (teamColor == TeamColor.WHITE){
+            opponentColor = TeamColor.BLACK;
+        }
+
         HashSet<ChessMove> moveList = new HashSet<ChessMove>();
-        ArrayList<ChessPosition> piecePositions = findPositions(teamColor);
+        ArrayList<ChessPosition> piecePositions = findPositions(opponentColor);
 
         for (ChessPosition position : piecePositions){
             ChessPiece piece = new ChessPiece(pretendBoard.getPiece(position).getTeamColor(),
@@ -172,7 +178,7 @@ public class ChessGame {
             for (int j = 1; j < 9; j++) {
                 tempPosition = new ChessPosition(i, j);
                 if (pretendBoard.getPiece(tempPosition) != null
-                        && pretendBoard.getPiece(tempPosition).getTeamColor() != teamColor) {
+                        && pretendBoard.getPiece(tempPosition).getTeamColor() == teamColor) {
                     piecePositions.add(tempPosition);
                 }
             }
@@ -180,14 +186,7 @@ public class ChessGame {
         return piecePositions;
     }
 
-    /**
-     * Determines if the given team is in check
-     *
-     * @param teamColor which team to check for check
-     * @return True if the specified team is in check
-     */
-    public boolean isInCheck(TeamColor teamColor) {
-        copyBoard();
+    public boolean checkNoCopy(TeamColor teamColor) {
         Collection<ChessMove> opponentsMoves;
         opponentsMoves = opponentMoves(teamColor);
         ChessPosition kingPosition = findKing(teamColor);
@@ -199,6 +198,18 @@ public class ChessGame {
         }
         return false;
 
+    }
+
+
+    /**
+     * Determines if the given team is in check
+     *
+     * @param teamColor which team to check for check
+     * @return True if the specified team is in check
+     */
+    public boolean isInCheck(TeamColor teamColor) {
+        copyBoard();
+        return checkNoCopy(teamColor);
     }
 
 
