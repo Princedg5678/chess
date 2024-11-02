@@ -131,10 +131,6 @@ public class ChessGame {
             myBoard.addPiece(endPosition, piece);
             myBoard.removePiece(currentPosition);
         }
-
-
-
-
     }
 
 
@@ -191,6 +187,7 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
+        copyBoard();
         Collection<ChessMove> opponentsMoves;
         opponentsMoves = opponentMoves(teamColor);
         ChessPosition kingPosition = findKing(teamColor);
