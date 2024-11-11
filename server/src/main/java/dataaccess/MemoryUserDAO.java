@@ -11,5 +11,12 @@ public class MemoryUserDAO implements UserDAO{
         return usernameSet.contains(username);
     }
 
+    public void createUser(String username, String password, String email){
+        usernameSet.add(username);
+
+        //Add username, password, and email to a new variable
+
+    }
+
 
 }
