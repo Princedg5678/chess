@@ -29,7 +29,7 @@ public class Server {
     }
 
     private Object clearDb(Request req, Response res) {
-        //call DAO
+
 
         return "";
     }
