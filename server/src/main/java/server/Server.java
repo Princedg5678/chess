@@ -41,9 +41,9 @@ public class Server {
     private Object registerUser(Request req, Response res) throws DataAccessException {
         RegisterUser registerUser = new Gson().fromJson(req.body(), RegisterUser.class);
 
-        userService.registerUser(registerUser);
+        UserData newUser = userService.registerUser(registerUser);
 
-        return "";
+        return new Gson().toJson(newUser);
     }
 
 

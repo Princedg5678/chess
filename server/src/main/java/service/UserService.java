@@ -1,5 +1,6 @@
 package service;
 
+import org.mindrot.jbcrypt.BCrypt;
 import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
@@ -16,6 +17,18 @@ public class UserService {
         this.userDAO = userDao;
     }
 
+    private String hashPassword(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt());
+    }
+
+    boolean verifyUser(String username, String password) {
+        // read the previously hashed password from the database
+
+        return true;
+    }
+
+
+
     public UserData registerUser(RegisterUser newUser) throws DataAccessException{
 
         String username = newUser.username();
@@ -26,7 +39,13 @@ public class UserService {
             throw new DataAccessException("Username already taken");
         }
 
-        return null;
+        String hashedPassword = hashPassword(password);
+
+        userDAO.createUser(username, hashedPassword, email);
+
+        String authToken = authDAO.generateToken();
+
+        return new UserData(authToken, username);
     }
 
     private void clear(){
