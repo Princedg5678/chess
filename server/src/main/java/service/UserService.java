@@ -35,6 +35,10 @@ public class UserService {
         String password = newUser.password();
         String email = newUser.email();
 
+        if (username == null || password == null || email == null){
+            throw new DataAccessException("Bad Request");
+        }
+
         if (userDAO.getUser(username)){
             throw new DataAccessException("Username already taken");
         }
