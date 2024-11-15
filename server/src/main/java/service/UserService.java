@@ -35,7 +35,8 @@ public class UserService {
         String password = newUser.password();
         String email = newUser.email();
 
-        if (username == null || password == null || email == null){
+        if (username == null || password == null || email == null
+                || username.isEmpty() || password.isEmpty() || email.isEmpty()){
             throw new DataAccessException("Bad Request");
         }
 

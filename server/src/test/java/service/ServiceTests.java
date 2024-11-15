@@ -29,5 +29,22 @@ public class ServiceTests {
         assertTrue(userDao.getUser(newUser.username()));
     }
 
+    @Test
+    @Order(2)
+    @DisplayName("registerUserTest2")
+    public void registerBadRequest() throws DataAccessException {
+        RegisterUser badUser = new RegisterUser("Hello", "World!", "");
+        assertThrows(DataAccessException.class, ()-> userService.registerUser(badUser));
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("registerUserTest3")
+    public void registerRepeatedUser() throws DataAccessException {
+        RegisterUser repeatUser = new RegisterUser("Hungry", "For", "Cheese");
+        userService.registerUser(repeatUser);
+        assertThrows(DataAccessException.class, ()-> userService.registerUser(repeatUser));
+    }
+
 
 }
