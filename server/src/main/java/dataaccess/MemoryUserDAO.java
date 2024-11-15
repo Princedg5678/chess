@@ -23,5 +23,12 @@ public class MemoryUserDAO implements UserDAO{
 
     }
 
+    public void clearUsers(){
+        usernameSet.clear();
+        newUserData.clear();
+    }
+
+    //Make sure clear function is finished
+
 
 }

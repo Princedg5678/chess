@@ -17,7 +17,7 @@ public class ClearDataService {
     }
 
     public void clearData(){
-
+        userDao.clearUsers();
     }
 
 }
