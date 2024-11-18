@@ -1,5 +1,6 @@
 package service;
 
+import model.LoginUser;
 import org.mindrot.jbcrypt.BCrypt;
 import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
@@ -23,8 +24,9 @@ public class UserService {
 
     boolean verifyUser(String username, String password) {
         // read the previously hashed password from the database
+        String comparisonPassword = userDAO.getPassword(username);
 
-        return true;
+        return BCrypt.checkpw(comparisonPassword, password);
     }
 
 
@@ -40,7 +42,7 @@ public class UserService {
             throw new DataAccessException("Error: bad request");
         }
 
-        if (userDAO.getUser(username)){
+        if (userDAO.checkUser(username)){
             throw new DataAccessException("Error: already taken");
         }
 
@@ -53,7 +55,22 @@ public class UserService {
         return new UserData(authToken, username);
     }
 
-    private void clear(){
+    public UserData loginUser(LoginUser loginRequest) throws DataAccessException{
+
+        String username = loginRequest.username();
+        String password = loginRequest.password();
+
+        if (!userDAO.checkUser(username)){
+            throw new DataAccessException("Error: unauthorized");
+        }
+
+        if (!verifyUser(username, password)){
+            throw new DataAccessException("Error: unauthorized");
+        }
+
+        String authToken = authDAO.generateToken();
+        return new UserData(authToken, username);
 
     }
+
 }

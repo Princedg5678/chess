@@ -12,8 +12,12 @@ public class MemoryUserDAO implements UserDAO{
     Set<String> usernameSet = new HashSet<String>();
     Map<String, RegisterUser> newUserData = new HashMap<>();
 
-    public boolean getUser(String username){
+    public boolean checkUser(String username){
         return usernameSet.contains(username);
+    }
+
+    public String getPassword(String username){
+        return newUserData.get(username).password();
     }
 
     public void createUser(String username, String password, String email){

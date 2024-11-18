@@ -6,6 +6,7 @@ import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
 import model.Error;
+import model.LoginUser;
 import model.RegisterUser;
 import model.UserData;
 import service.UserService;
@@ -31,6 +32,7 @@ public class Server {
 
         // Register your endpoints and handle exceptions here.
         Spark.post("/user", this::registerUser);
+        Spark.post("/session", this::loginUser);
 
         Spark.delete("/db", this::clearDb);
 
@@ -70,6 +72,13 @@ public class Server {
         return new Gson().toJson(newUser);
     }
 
+    private Object loginUser(Request req, Response res) throws DataAccessException {
+        LoginUser loginUser = new Gson().fromJson(req.body(), LoginUser.class);
+
+        UserData loggedInUser = userService.loginUser(loginUser);
+
+        return new Gson().toJson(loggedInUser);
+    }
 
     private Object clearDb(Request req, Response res) {
 
