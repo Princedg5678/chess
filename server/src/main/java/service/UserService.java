@@ -37,11 +37,11 @@ public class UserService {
 
         if (username == null || password == null || email == null
                 || username.isEmpty() || password.isEmpty() || email.isEmpty()){
-            throw new DataAccessException("Bad Request");
+            throw new DataAccessException("Error: bad request");
         }
 
         if (userDAO.getUser(username)){
-            throw new DataAccessException("Username already taken");
+            throw new DataAccessException("Error: already taken");
         }
 
         String hashedPassword = hashPassword(password);

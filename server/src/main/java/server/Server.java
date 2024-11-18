@@ -5,6 +5,7 @@ import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
+import model.Error;
 import model.RegisterUser;
 import model.UserData;
 import service.UserService;
@@ -35,31 +36,29 @@ public class Server {
 
         Spark.exception(DataAccessException.class, this::catchError);
 
-        //This line initializes the server and can be removed once you have a functioning endpoint 
-        Spark.init();
-
         Spark.awaitInitialization();
         return Spark.port();
     }
 
     private void catchError(Exception ex, Request req, Response res){
         String error = ex.getMessage();
+        Error convertedError = new Error(error);
 
-        if (Objects.equals(error, "Username already taken")){
+        if (Objects.equals(error, "Error: already taken")){
             res.status(403);
-            res.body(new Gson().toJson(error));
+            res.body(new Gson().toJson(convertedError));
         }
-        else if (Objects.equals(error, "Bad Request")){
+        else if (Objects.equals(error, "Error: bad request")){
             res.status(400);
-            res.body(new Gson().toJson(error));
+            res.body(new Gson().toJson(convertedError));
         }
-        else if (Objects.equals(error, "Unauthorized")){
+        else if (Objects.equals(error, "Error: unauthorized")){
             res.status(401);
-            res.body(new Gson().toJson(error));
+            res.body(new Gson().toJson(convertedError));
         }
         else {
             res.status(500);
-            res.body(new Gson().toJson(error));
+            res.body(new Gson().toJson(convertedError));
         }
     }
 
