@@ -5,6 +5,7 @@ import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
 import model.RegisterUser;
+import model.LoginUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,7 @@ public class ServiceTests {
     @DisplayName("registerUserTest")
     public void register() throws DataAccessException {
         userService.registerUser(newUser);
-        assertTrue(userDao.getUser(newUser.username()));
+        assertTrue(userDao.checkUser(newUser.username()));
     }
 
     @Test
@@ -44,6 +45,15 @@ public class ServiceTests {
         RegisterUser repeatUser = new RegisterUser("Hungry", "For", "Cheese");
         userService.registerUser(repeatUser);
         assertThrows(DataAccessException.class, ()-> userService.registerUser(repeatUser));
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("loginTest")
+    public void loginUser() throws DataAccessException {
+        LoginUser loginUser =  new LoginUser("Testing", "is");
+        userService.loginUser(loginUser);
+        assertTrue(userDao.checkUser(loginUser.username()));
     }
 
 

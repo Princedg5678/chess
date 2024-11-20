@@ -33,6 +33,7 @@ public class Server {
         // Register your endpoints and handle exceptions here.
         Spark.post("/user", this::registerUser);
         Spark.post("/session", this::loginUser);
+        Spark.delete("/session", this::logoutUser);
 
         Spark.delete("/db", this::clearDb);
 
@@ -69,15 +70,30 @@ public class Server {
 
         UserData newUser = userService.registerUser(registerUser);
 
+        res.status(200);
+
         return new Gson().toJson(newUser);
     }
-
+    //check tests for wrong password
     private Object loginUser(Request req, Response res) throws DataAccessException {
         LoginUser loginUser = new Gson().fromJson(req.body(), LoginUser.class);
 
         UserData loggedInUser = userService.loginUser(loginUser);
 
+        res.status(200);
+
         return new Gson().toJson(loggedInUser);
+    }
+
+    private Object logoutUser(Request req, Response res) throws DataAccessException {
+
+        String authToken = req.headers("authorization");
+
+        userService.logoutUser(authToken);
+
+        res.status(200);
+
+        return "";
     }
 
     private Object clearDb(Request req, Response res) {

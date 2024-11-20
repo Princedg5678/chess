@@ -26,7 +26,7 @@ public class UserService {
         // read the previously hashed password from the database
         String comparisonPassword = userDAO.getPassword(username);
 
-        return BCrypt.checkpw(comparisonPassword, password);
+        return BCrypt.checkpw(password, comparisonPassword);
     }
 
 
@@ -50,7 +50,7 @@ public class UserService {
 
         userDAO.createUser(username, hashedPassword, email);
 
-        String authToken = authDAO.generateToken();
+        String authToken = authDAO.generateToken(username);
 
         return new UserData(authToken, username);
     }
@@ -68,9 +68,19 @@ public class UserService {
             throw new DataAccessException("Error: unauthorized");
         }
 
-        String authToken = authDAO.generateToken();
+        String authToken = authDAO.generateToken(username);
         return new UserData(authToken, username);
 
+    }
+
+    public void logoutUser(String authToken) throws DataAccessException{
+
+        if (!authDAO.checkToken(authToken)){
+            throw new DataAccessException("Error: unauthorized");
+        }
+        else {
+            authDAO.deleteToken(authToken);
+        }
     }
 
 }
