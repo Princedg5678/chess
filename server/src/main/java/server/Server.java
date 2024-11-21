@@ -5,10 +5,9 @@ import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
+import model.*;
 import model.Error;
-import model.LoginUser;
-import model.RegisterUser;
-import model.UserData;
+import service.GameService;
 import service.UserService;
 import spark.*;
 
@@ -20,6 +19,7 @@ public class Server {
     MemoryGameDAO gameDao = new MemoryGameDAO();
     MemoryUserDAO userDao = new MemoryUserDAO();
     UserService userService = new UserService(authDao, userDao);
+    GameService gameService = new GameService(authDao, gameDao);
 
     public Server(){
 
@@ -34,7 +34,9 @@ public class Server {
         Spark.post("/user", this::registerUser);
         Spark.post("/session", this::loginUser);
         Spark.delete("/session", this::logoutUser);
-
+        Spark.get("/game", this::listGames);
+        Spark.post("/game", this::createGame);
+        Spark.put("/game", this::joinGame);
         Spark.delete("/db", this::clearDb);
 
         Spark.exception(DataAccessException.class, this::catchError);
@@ -95,7 +97,34 @@ public class Server {
 
         return "";
     }
+    private Object listGames(Request req, Response res) throws DataAccessException {
+        String authToken = req.headers("authorization");
 
+        gameService.listGames(authToken);
+
+        res.status(200);
+
+        return "";
+    }
+    private Object createGame(Request req, Response res) throws DataAccessException {
+        String authToken = req.headers("authorization");
+        GameName gameName = new Gson().fromJson(req.body(), GameName.class);
+
+        int gameID = gameService.createGame(authToken, gameName);
+
+        res.status(200);
+
+        return new Gson().toJson(new GameID(gameID));
+    }
+    private Object joinGame(Request req, Response res) throws DataAccessException {
+        String authToken = req.headers("authorization");
+
+        gameService.joinGame();
+
+        res.status(200);
+
+        return "";
+    }
     private Object clearDb(Request req, Response res) {
 
 

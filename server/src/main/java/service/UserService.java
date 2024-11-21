@@ -3,17 +3,17 @@ package service;
 import model.LoginUser;
 import org.mindrot.jbcrypt.BCrypt;
 import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.AuthDAO;
+import dataaccess.UserDAO;
 import model.RegisterUser;
 import model.UserData;
 
 public class UserService {
 
-    MemoryAuthDAO authDAO;
-    MemoryUserDAO userDAO;
+    AuthDAO authDAO;
+    UserDAO userDAO;
 
-    public UserService(MemoryAuthDAO authDao, MemoryUserDAO userDao) {
+    public UserService(AuthDAO authDao, UserDAO userDao) {
         this.authDAO = authDao;
         this.userDAO = userDao;
     }
