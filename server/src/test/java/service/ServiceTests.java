@@ -6,6 +6,7 @@ import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
 import model.RegisterUser;
 import model.LoginUser;
+import model.UserData;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -51,9 +52,40 @@ public class ServiceTests {
     @Order(4)
     @DisplayName("loginTest")
     public void loginUser() throws DataAccessException {
-        LoginUser loginUser =  new LoginUser("Testing", "is");
+        RegisterUser user = new RegisterUser("Cool", "Awesome", "Crazy");
+        userService.registerUser(user);
+        LoginUser loginUser =  new LoginUser("Cool", "Awesome");
         userService.loginUser(loginUser);
         assertTrue(userDao.checkUser(loginUser.username()));
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("loginTest2")
+    public void failedLogin() throws DataAccessException {
+        LoginUser loginUser =  new LoginUser("Oh", "No");
+        assertThrows(DataAccessException.class, ()-> userService.loginUser(loginUser));
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("logoutTest")
+    public void logoutUser() throws DataAccessException {
+        RegisterUser user = new RegisterUser("Crispy", "Chicken", "Nuggets");
+        UserData registerResult = userService.registerUser(user);
+        userService.logoutUser(registerResult.authToken());
+        assertFalse(authDao.checkToken(registerResult.authToken()));
+    }
+
+    @Test
+    @Order(7)
+    @DisplayName("logoutTest2")
+    public void logoutFail() throws DataAccessException {
+        RegisterUser user = new RegisterUser("Cheeseburger", "Fries", "Milkshake");
+        userService.registerUser(user);
+        String badToken = "McDonald's";
+        assertThrows(DataAccessException.class, ()-> userService.logoutUser(badToken));
+
     }
 
 

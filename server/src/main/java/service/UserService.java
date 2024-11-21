@@ -22,7 +22,7 @@ public class UserService {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
-    boolean verifyUser(String username, String password) {
+    private boolean verifyUser(String username, String password) {
         // read the previously hashed password from the database
         String comparisonPassword = userDAO.getPassword(username);
 
