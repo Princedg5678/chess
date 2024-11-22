@@ -23,5 +23,9 @@ public class MemoryGameDAO implements GameDAO{
         return new Random().nextInt(9000) + 1000;
     }
 
+    public void clearGames(){
+        gameMap.clear();
+    }
+
 
 }

@@ -9,6 +9,7 @@ import model.*;
 import model.Error;
 import service.GameService;
 import service.UserService;
+import service.ClearDataService;
 import spark.*;
 
 import java.util.Objects;
@@ -20,6 +21,7 @@ public class Server {
     MemoryUserDAO userDao = new MemoryUserDAO();
     UserService userService = new UserService(authDao, userDao);
     GameService gameService = new GameService(authDao, gameDao);
+    ClearDataService clearService = new ClearDataService(authDao, gameDao, userDao);
 
     public Server(){
 
@@ -119,7 +121,7 @@ public class Server {
     private Object joinGame(Request req, Response res) throws DataAccessException {
         String authToken = req.headers("authorization");
 
-        gameService.joinGame();
+        //gameService.joinGame();
 
         res.status(200);
 
@@ -127,6 +129,9 @@ public class Server {
     }
     private Object clearDb(Request req, Response res) {
 
+        clearService.clearData();
+
+        res.status(200);
 
         return "";
     }

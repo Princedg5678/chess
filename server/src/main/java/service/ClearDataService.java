@@ -18,6 +18,8 @@ public class ClearDataService {
 
     public void clearData(){
         userDao.clearUsers();
+        gameDao.clearGames();
+        authDao.clearAuthData();
     }
 
 }
