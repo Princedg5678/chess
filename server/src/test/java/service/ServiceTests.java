@@ -4,6 +4,7 @@ import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
+import model.GameName;
 import model.RegisterUser;
 import model.LoginUser;
 import model.UserData;
@@ -20,6 +21,7 @@ public class ServiceTests {
     MemoryGameDAO gameDao = new MemoryGameDAO();
     MemoryUserDAO userDao = new MemoryUserDAO();
     UserService userService = new UserService(authDao, userDao);
+    GameService gameService = new GameService(authDao, gameDao);
     RegisterUser newUser = new RegisterUser("Testing", "is", "fun!");
 
 
@@ -88,5 +90,30 @@ public class ServiceTests {
 
     }
 
+    @Test
+    @Order(8)
+    @DisplayName("createGameTest")
+    public void createGame() throws DataAccessException {
+        RegisterUser user = new RegisterUser("Yet", "Another", "Test");
+        UserData loginResult = userService.registerUser(user);
+
+        GameName gameName = new GameName("FIGHT ME");
+
+        gameService.createGame(loginResult.authToken(), gameName);
+        assertNotNull(gameService.listGames(loginResult.authToken()));
+    }
+
+    @Test
+    @Order(9)
+    @DisplayName("createGameTest2")
+    public void CreateGameFail() throws DataAccessException {
+        RegisterUser user = new RegisterUser("Mac", "And", "Cheese");
+        userService.registerUser(user);
+        String badToken = "Bowl";
+        GameName gameName = new GameName("SHOWTIME");
+
+        assertThrows(DataAccessException.class, ()-> gameService.createGame(badToken, gameName));
+
+    }
 
 }

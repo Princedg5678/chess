@@ -3,7 +3,13 @@ package service;
 import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
+import model.GameData;
+import model.GameList;
 import model.GameName;
+import model.GameResult;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 public class GameService {
 
@@ -16,12 +22,21 @@ public class GameService {
     }
 
 
-    public void listGames(String authToken) throws DataAccessException {
+    public GameList listGames(String authToken) throws DataAccessException {
         if (!authDAO.checkToken(authToken)){
             throw new DataAccessException("Error: unauthorized");
         }
-        //finish after completing createGame;
+        Map<Integer, GameData> gameMap = gameDAO.listGames();
+        ArrayList<GameResult> gameResults = new ArrayList<>();
 
+        for (GameData gameData: gameMap.values()){
+            GameResult tempResult = new GameResult(gameData.gameID(), gameData.whiteUsername(),
+                    gameData.blackUsername(), gameData.gameName());
+            gameResults.add(tempResult);
+        }
+
+
+        return new GameList(gameResults);
     }
 
     public Integer createGame(String authToken, GameName gameName) throws DataAccessException {

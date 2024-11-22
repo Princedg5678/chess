@@ -12,6 +12,7 @@ import service.UserService;
 import service.ClearDataService;
 import spark.*;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Server {
@@ -102,11 +103,11 @@ public class Server {
     private Object listGames(Request req, Response res) throws DataAccessException {
         String authToken = req.headers("authorization");
 
-        gameService.listGames(authToken);
+        GameList ourGames = gameService.listGames(authToken);
 
         res.status(200);
 
-        return "";
+        return new Gson().toJson(ourGames);
     }
     private Object createGame(Request req, Response res) throws DataAccessException {
         String authToken = req.headers("authorization");

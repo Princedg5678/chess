@@ -23,6 +23,10 @@ public class MemoryGameDAO implements GameDAO{
         return new Random().nextInt(9000) + 1000;
     }
 
+    public Map<Integer, GameData> listGames(){
+        return gameMap;
+    }
+
     public void clearGames(){
         gameMap.clear();
     }
