@@ -20,6 +20,10 @@ public class MemoryUserDAO implements UserDAO{
         return newUserData.get(username).password();
     }
 
+    public Map<String, RegisterUser> getUsers(){
+        return newUserData;
+    }
+
     public void createUser(String username, String password, String email){
         usernameSet.add(username);
 

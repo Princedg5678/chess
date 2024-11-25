@@ -4,10 +4,7 @@ import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
-import model.GameName;
-import model.RegisterUser;
-import model.LoginUser;
-import model.UserData;
+import model.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -22,6 +19,7 @@ public class ServiceTests {
     MemoryUserDAO userDao = new MemoryUserDAO();
     UserService userService = new UserService(authDao, userDao);
     GameService gameService = new GameService(authDao, gameDao);
+    ClearDataService clearDataService = new ClearDataService(authDao, gameDao, userDao);
     RegisterUser newUser = new RegisterUser("Testing", "is", "fun!");
 
 
@@ -114,6 +112,67 @@ public class ServiceTests {
 
         assertThrows(DataAccessException.class, ()-> gameService.createGame(badToken, gameName));
 
+    }
+
+    @Test
+    @Order(10)
+    @DisplayName("listGamesTest")
+    public void listGames() throws DataAccessException {
+        clearDataService.clearData();
+        RegisterUser user = new RegisterUser("Hate", "Being", "Sick");
+        UserData loginResult = userService.registerUser(user);
+
+        GameName gameName = new GameName("FINISH HIM");
+        GameName gameName2 = new GameName("PUNCH-OUT");
+        gameService.createGame(loginResult.authToken(), gameName);
+        gameService.createGame(loginResult.authToken(), gameName2);
+
+        GameList gameList = gameService.listGames(loginResult.authToken());
+        assertEquals(2, gameList.games().size());
+
+    }
+
+    @Test
+    @Order(11)
+    @DisplayName("listGamesTest2")
+    public void listGamesFail() throws DataAccessException {
+        clearDataService.clearData();
+        RegisterUser user = new RegisterUser("Sore", "Throats", "Hurt");
+        UserData loginResult = userService.registerUser(user);
+        String badToken = "Virus";
+
+        GameName gameName = new GameName("I AM IN PAIN");
+        GameName gameName2 = new GameName("HELP");
+        gameService.createGame(loginResult.authToken(), gameName);
+        gameService.createGame(loginResult.authToken(), gameName2);
+
+        assertThrows(DataAccessException.class, ()-> gameService.listGames(badToken));
+
+    }
+
+
+
+
+
+
+
+
+
+
+    @Test
+    @Order(14)
+    @DisplayName("clearDBTest")
+    public void clearDB() throws DataAccessException {
+        RegisterUser user = new RegisterUser("The", "Final", "Test");
+        UserData loginResult = userService.registerUser(user);
+        GameName gameName = new GameName("AT LAST");
+        gameService.createGame(loginResult.authToken(), gameName);
+
+        clearDataService.clearData();
+
+        assertEquals(0, userDao.getUsers().size());
+        assertEquals(0, gameDao.listGames().size());
+        assertEquals(0, authDao.getAuthData().size());
     }
 
 }
