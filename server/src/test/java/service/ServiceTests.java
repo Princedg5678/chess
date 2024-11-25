@@ -104,7 +104,7 @@ public class ServiceTests {
     @Test
     @Order(9)
     @DisplayName("createGameTest2")
-    public void CreateGameFail() throws DataAccessException {
+    public void createGameFail() throws DataAccessException {
         RegisterUser user = new RegisterUser("Mac", "And", "Cheese");
         userService.registerUser(user);
         String badToken = "Bowl";
