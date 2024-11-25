@@ -23,6 +23,10 @@ public class MemoryAuthDAO implements AuthDAO{
         return authMap;
     }
 
+    public String getUsername(String token){
+        return authMap.get(token);
+    }
+
     public void deleteToken(String authToken){
         authMap.remove(authToken, authMap.get(authToken));
     }

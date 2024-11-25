@@ -121,8 +121,9 @@ public class Server {
     }
     private Object joinGame(Request req, Response res) throws DataAccessException {
         String authToken = req.headers("authorization");
+        JoinRequest joinRequest = new Gson().fromJson(req.body(), JoinRequest.class);
 
-        //gameService.joinGame();
+        gameService.joinGame(authToken, joinRequest.playerColor(), joinRequest.gameID());
 
         res.status(200);
 
