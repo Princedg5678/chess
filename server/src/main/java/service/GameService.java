@@ -81,6 +81,9 @@ public class GameService {
                 gameDAO.addPlayer(gameData, playerColor, username);
             }
         }
+        else {
+            throw new DataAccessException("Error: bad request");
+        }
 
 
     }

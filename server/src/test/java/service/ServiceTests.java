@@ -151,13 +151,43 @@ public class ServiceTests {
     }
 
 
+    @Test
+    @Order(12)
+    @DisplayName("JoinGameTest")
+    public void joinGame() throws DataAccessException {
+        RegisterUser user = new RegisterUser("Getting", "There", "Soon");
+        UserData loginResult = userService.registerUser(user);
+
+        GameName gameName = new GameName("Almost there");
+        Integer gameID = gameService.createGame(loginResult.authToken(), gameName);
+
+        gameService.joinGame(loginResult.authToken(), "WHITE", gameID);
+        gameService.joinGame(loginResult.authToken(), "BLACK", gameID);
+
+        GameData ourGame = gameDao.findGame(gameID);
+
+        assertEquals(user.username(), ourGame.whiteUsername());
+        assertEquals(user.username(), ourGame.blackUsername());
 
 
 
+    }
+
+    @Test
+    @Order(13)
+    @DisplayName("JoinGameTest2")
+    public void joinGameFail() throws DataAccessException {
+        RegisterUser user = new RegisterUser("One", "More", "Left");
+        UserData loginResult = userService.registerUser(user);
+
+        GameName gameName = new GameName("So Close");
+        Integer gameID = gameService.createGame(loginResult.authToken(), gameName);
+
+        assertThrows(DataAccessException.class, ()-> gameService.joinGame(loginResult.authToken(),
+                "", gameID));
 
 
-
-
+    }
 
     @Test
     @Order(14)
