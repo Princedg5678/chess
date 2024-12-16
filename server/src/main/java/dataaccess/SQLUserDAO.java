@@ -1,14 +1,16 @@
 package dataaccess;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class SQLUserDAO implements UserDAO{
 
     public SQLUserDAO() throws DataAccessException {
         DatabaseManager.createDatabase();
+        createDataTables();
     }
 
-    private final String[] createDataTables = {
+    private final String[] statements = {
             """
             CREATE TABLE IF NOT EXISTS  users (
               `username` varchar(256) NOT NULL,
@@ -40,6 +42,11 @@ public class SQLUserDAO implements UserDAO{
 
     private void createDataTables() throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()){
+            for (String currentStatement: statements){
+                try (PreparedStatement preparedStatement = conn.prepareStatement(currentStatement)) {
+                    preparedStatement.executeUpdate();
+                }
+            }
 
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
@@ -57,9 +64,17 @@ public class SQLUserDAO implements UserDAO{
     }
 
     @Override
-    public void clearUsers() {
-
+    public void clearUsers() throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()){
+            try (PreparedStatement preparedStatement = conn.prepareStatement("TRUNCATE TABLE user")) {
+                preparedStatement.executeUpdate();
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(e.getMessage());
+        }
     }
+
+    //do this for the other functions
 
     @Override
     public String getPassword(String username) {

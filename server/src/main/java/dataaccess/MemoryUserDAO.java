@@ -31,7 +31,7 @@ public class MemoryUserDAO implements UserDAO{
 
     }
 
-    public void clearUsers(){
+    public void clearUsers() throws DataAccessException{
         usernameSet.clear();
         newUserData.clear();
     }

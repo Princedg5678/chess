@@ -1,10 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
-import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.*;
 import model.*;
 import model.Error;
 import service.GameService;
@@ -17,15 +14,27 @@ import java.util.Objects;
 
 public class Server {
 
-    MemoryAuthDAO authDao = new MemoryAuthDAO();
-    MemoryGameDAO gameDao = new MemoryGameDAO();
-    MemoryUserDAO userDao = new MemoryUserDAO();
-    UserService userService = new UserService(authDao, userDao);
-    GameService gameService = new GameService(authDao, gameDao);
-    ClearDataService clearService = new ClearDataService(authDao, gameDao, userDao);
+    AuthDAO authDao = new MemoryAuthDAO();
+    GameDAO gameDao = new MemoryGameDAO();
+    UserDAO userDao = new MemoryUserDAO();
+
+    UserService userService;
+    GameService gameService;
+    ClearDataService clearService;
 
     public Server(){
+        try {
+            authDao = new SQLAuthDAO();
+            gameDao = new SQLGameDAO();
+            userDao = new SQLUserDAO();
+        } catch (DataAccessException e) {
+            System.out.println("SQL not Found, Using memory");
+            System.out.println(e.getMessage());
+        }
 
+        userService = new UserService(authDao, userDao);
+        gameService = new GameService(authDao, gameDao);
+        clearService = new ClearDataService(authDao, gameDao, userDao);
     }
 
     public int run(int desiredPort) {
@@ -129,7 +138,7 @@ public class Server {
 
         return "";
     }
-    private Object clearDb(Request req, Response res) {
+    private Object clearDb(Request req, Response res) throws DataAccessException {
 
         clearService.clearData();
 
