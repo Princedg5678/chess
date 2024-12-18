@@ -54,19 +54,46 @@ public class SQLUserDAO implements UserDAO{
     }
 
     @Override
-    public boolean checkUser(String username) {
+    public boolean checkUser(String username) throws DataAccessException {
+
+        try (var conn = DatabaseManager.getConnection()){
+            try (PreparedStatement preparedStatement =
+                         conn.prepareStatement("SELECT username FROM users WHERE username = ?;")) {
+                preparedStatement.setString(1, username);
+                try (var resultStatement = preparedStatement.executeQuery()){
+                    if (resultStatement.next()){
+                        return true;
+                    }
+                }
+
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(e.getMessage());
+        }
+
         return false;
     }
 
     @Override
-    public void createUser(String username, String password, String email) {
-
+    public void createUser(String username, String password, String email) throws DataAccessException{
+        try (var conn = DatabaseManager.getConnection()){
+            try (PreparedStatement preparedStatement =
+                         conn.prepareStatement("INSERT INTO users (username, password, email) " +
+                                 "VALUES (?, ?, ?);")) {
+                preparedStatement.setString(1, username);
+                preparedStatement.setString(2, password);
+                preparedStatement.setString(3, email);
+                preparedStatement.executeUpdate();
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(e.getMessage());
+        }
     }
 
     @Override
     public void clearUsers() throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()){
-            try (PreparedStatement preparedStatement = conn.prepareStatement("TRUNCATE TABLE user")) {
+            try (PreparedStatement preparedStatement = conn.prepareStatement("TRUNCATE TABLE users")) {
                 preparedStatement.executeUpdate();
             }
         } catch (Exception e) {
@@ -77,7 +104,20 @@ public class SQLUserDAO implements UserDAO{
     //do this for the other functions
 
     @Override
-    public String getPassword(String username) {
+    public String getPassword(String username) throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()){
+            try (PreparedStatement preparedStatement =
+                         conn.prepareStatement("SELECT password FROM users WHERE username = ?;")) {
+                preparedStatement.setString(1, username);
+                try (var resultStatement = preparedStatement.executeQuery()){
+                    if (resultStatement.next()){
+                        return resultStatement.getString("password");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(e.getMessage());
+        }
         return "";
     }
 }
