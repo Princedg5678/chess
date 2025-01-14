@@ -63,7 +63,7 @@ public class DataAccessTests {
     @Test
     @Order(3)
     @DisplayName("createUserTestFailure")
-    public void createFail() throws DataAccessException, SQLException {
+    public void createFail() throws DataAccessException {
         userDao.clearUsers();
         userDao.createUser("Agh","Not","Again!");
 
@@ -73,7 +73,7 @@ public class DataAccessTests {
     @Test
     @Order(4)
     @DisplayName("checkUserTest")
-    public void check() throws DataAccessException, SQLException {
+    public void check() throws DataAccessException {
         userDao.clearUsers();
         userDao.createUser("Agh","Not","Again!");
 
@@ -84,7 +84,7 @@ public class DataAccessTests {
     @Test
     @Order(5)
     @DisplayName("checkUserTestFailure")
-    public void checkFail() throws DataAccessException, SQLException {
+    public void checkFail() throws DataAccessException {
         userDao.clearUsers();
         userDao.createUser("Agh","Not","Again!");
 
@@ -93,9 +93,9 @@ public class DataAccessTests {
     }
 
     @Test
-    @Order(4)
+    @Order(6)
     @DisplayName("getPasswordTest")
-    public void getPassword() throws DataAccessException, SQLException {
+    public void getPassword() throws DataAccessException {
         userDao.clearUsers();
         userDao.createUser("Agh", "Not", "Again!");
 
@@ -106,7 +106,7 @@ public class DataAccessTests {
     @Test
     @Order(7)
     @DisplayName("getPasswordTestFailure")
-    public void getPasswordFail() throws DataAccessException, SQLException {
+    public void getPasswordFail() throws DataAccessException {
         userDao.clearUsers();
         userDao.createUser("Agh","Not","Again!");
 
