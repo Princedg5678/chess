@@ -113,11 +113,13 @@ public class SQLUserDAO implements UserDAO{
                     if (resultStatement.next()){
                         return resultStatement.getString("password");
                     }
+                    else {
+                        throw new DataAccessException("Error: unauthorized");
+                    }
                 }
             }
         } catch (Exception e) {
             throw new DataAccessException(e.getMessage());
         }
-        return "";
     }
 }

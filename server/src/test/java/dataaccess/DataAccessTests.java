@@ -1,12 +1,8 @@
 package dataaccess;
 
-import model.RegisterUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import service.ClearDataService;
-import service.GameService;
-import service.UserService;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,9 +15,6 @@ public class DataAccessTests {
     SQLAuthDAO authDao = new SQLAuthDAO();
     SQLGameDAO gameDao = new SQLGameDAO();
     SQLUserDAO userDao = new SQLUserDAO();
-    UserService userService = new UserService(authDao, userDao);
-    GameService gameService = new GameService(authDao, gameDao);
-    ClearDataService clearDataService = new ClearDataService(authDao, gameDao, userDao);
 
     Connection conn = DatabaseManager.getConnection();
 
@@ -32,11 +25,11 @@ public class DataAccessTests {
     @Order(1)
     @DisplayName("clearUsersTest")
     public void clear() throws DataAccessException, SQLException {
-        userService.registerUser(new RegisterUser("Im","Just","Junk"));
-        userService.registerUser(new RegisterUser("Taking","Out","Trash!"));
-        userService.registerUser(new RegisterUser("Going","To","Burn"));
+        userDao.createUser("Im","Just","Trash");
+        userDao.createUser("Scrap","Metal","User");
+        userDao.createUser("Into","The","Incinerator");
 
-        clearDataService.clearData();
+        userDao.clearUsers();
 
         try (PreparedStatement preparedStatement =
                      conn.prepareStatement("SELECT count(*) FROM users")){
@@ -53,8 +46,8 @@ public class DataAccessTests {
     @Order(2)
     @DisplayName("createUserTest")
     public void create() throws DataAccessException, SQLException {
-        clearDataService.clearData();
-        userService.registerUser(new RegisterUser("Agh","Not","Again!"));
+        userDao.clearUsers();
+        userDao.createUser("Agh","Not","Again!");
 
         try (PreparedStatement preparedStatement =
                      conn.prepareStatement("SELECT username FROM users WHERE username = ?")){
@@ -66,4 +59,59 @@ public class DataAccessTests {
             }
         }
     }
+
+    @Test
+    @Order(3)
+    @DisplayName("createUserTestFailure")
+    public void createFail() throws DataAccessException, SQLException {
+        userDao.clearUsers();
+        userDao.createUser("Agh","Not","Again!");
+
+        assertThrows(DataAccessException.class, ()-> userDao.createUser("Agh","Not","Again!"));
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("checkUserTest")
+    public void check() throws DataAccessException, SQLException {
+        userDao.clearUsers();
+        userDao.createUser("Agh","Not","Again!");
+
+        assertTrue(userDao.checkUser("Agh"));
+
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("checkUserTestFailure")
+    public void checkFail() throws DataAccessException, SQLException {
+        userDao.clearUsers();
+        userDao.createUser("Agh","Not","Again!");
+
+        assertFalse(userDao.checkUser("null"));
+
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("getPasswordTest")
+    public void getPassword() throws DataAccessException, SQLException {
+        userDao.clearUsers();
+        userDao.createUser("Agh", "Not", "Again!");
+
+        assertEquals("Not", userDao.getPassword("Agh"));
+
+    }
+
+    @Test
+    @Order(7)
+    @DisplayName("getPasswordTestFailure")
+    public void getPasswordFail() throws DataAccessException, SQLException {
+        userDao.clearUsers();
+        userDao.createUser("Agh","Not","Again!");
+
+        assertThrows(DataAccessException.class, ()-> userDao.getPassword("null"));
+
+    }
+
 }
