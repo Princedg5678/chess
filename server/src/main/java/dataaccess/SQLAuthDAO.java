@@ -2,6 +2,7 @@ package dataaccess;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -77,7 +78,21 @@ public class SQLAuthDAO implements AuthDAO{
 
     @Override
     public Map<String, String> getAuthData() throws DataAccessException {
-        return Map.of();
+        Map<String, String> authMap = new HashMap<>();
+        try (var conn = DatabaseManager.getConnection()){
+            try (PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM auth")) {
+                try (var result = preparedStatement.executeQuery()) {
+                    while (result.next()) {
+                       String authToken = result.getString(1);
+                       String username = result.getString(2);
+                       authMap.put(authToken, username);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(e.getMessage());
+        }
+        return authMap;
     }
 
     @Override
