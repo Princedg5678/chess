@@ -7,9 +7,12 @@ import model.GameID;
 import model.GameName;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class SQLGameDAO implements GameDAO {
     @Override
@@ -20,7 +23,7 @@ public class SQLGameDAO implements GameDAO {
                                  "gameName, game) VALUES (?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS)) {
                 preparedStatement.setString(1, null);
                 preparedStatement.setString(2, null);
-                preparedStatement.setString(3, new Gson().toJson(gameName));
+                preparedStatement.setString(3, gameName.gameName());
                 preparedStatement.setString(4, new Gson().toJson(new ChessGame()));
                 preparedStatement.executeUpdate();
                 var returnKeys = preparedStatement.getGeneratedKeys();
@@ -44,11 +47,7 @@ public class SQLGameDAO implements GameDAO {
                 try (var result = preparedStatement.executeQuery()){
                     while (result.next()){
                         int gameID = result.getInt(1);
-                        String whiteUsername = result.getString(2);
-                        String blackUsername = result.getString(3);
-                        String gameName = result.getString(4);
-                        ChessGame game = new Gson().fromJson(result.getString(5), ChessGame.class);
-                        GameData currentGame = new GameData(gameID, whiteUsername, blackUsername, gameName, game);
+                        GameData currentGame = makeGame(result);
                         gameMap.put(gameID, currentGame);
                     }
                 }
@@ -62,12 +61,59 @@ public class SQLGameDAO implements GameDAO {
 
     @Override
     public GameData findGame(Integer gameID) throws DataAccessException {
-        return null;
+        try (var conn = DatabaseManager.getConnection()) {
+            try (PreparedStatement preparedStatement =
+                         conn.prepareStatement("SELECT * FROM games WHERE gameID = ?;")) {
+                preparedStatement.setInt(1, gameID);
+                try (var result = preparedStatement.executeQuery()){
+                    if (result.next()){
+                        return makeGame(result);
+                    }
+                    else {
+                        throw new DataAccessException("Error: unauthorized");
+                    }
+                }
+            }
+        }  catch (Exception e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
+    private GameData makeGame(ResultSet result) throws SQLException{
+        int gameID = result.getInt(1);
+        String whiteUsername = result.getString(2);
+        String blackUsername = result.getString(3);
+        String gameName = result.getString(4);
+        ChessGame game = new Gson().fromJson(result.getString(5), ChessGame.class);
+        return new GameData(gameID, whiteUsername, blackUsername, gameName, game);
     }
 
     @Override
     public void addPlayer(GameData gameData, String playerColor, String username) throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()) {
+            int gameID = gameData.gameID();
+            if (playerColor.equalsIgnoreCase("WHITE")) {
+                try (PreparedStatement preparedStatement = conn.prepareStatement("UPDATE games " +
+                        "SET whiteUsername = ? WHERE gameID = ?")) {
 
+                    preparedStatement.setInt(2, gameID);
+                    preparedStatement.setString(1, username);
+                    preparedStatement.executeUpdate();
+                }
+            }
+            else {
+                try (PreparedStatement preparedStatement = conn.prepareStatement("UPDATE games " +
+                        "SET blackUsername = ? WHERE gameID = ?")) {
+
+                    preparedStatement.setInt(2, gameID);
+                    preparedStatement.setString(1, username);
+                    preparedStatement.executeUpdate();
+                }
+            }
+
+        } catch (Exception e) {
+            throw new DataAccessException(e.getMessage());
+        }
     }
 
     @Override
